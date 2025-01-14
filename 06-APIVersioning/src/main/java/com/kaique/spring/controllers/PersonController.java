@@ -1,6 +1,7 @@
 package com.kaique.spring.controllers;
 
 import com.kaique.spring.data.vo.v1.PersonVO;
+import com.kaique.spring.data.vo.v2.PersonVOV2;
 import com.kaique.spring.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -24,6 +25,13 @@ public class PersonController {
     public PersonVO create(@RequestBody PersonVO person) {
         return service.create(person);
     }
+
+    // Version 2
+    @PostMapping(value = "/v2", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public PersonVOV2 create(@RequestBody PersonVOV2 person) {
+        return service.create(person);
+    }
+
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public PersonVO findById(@PathVariable(value = "id") Long id) {
