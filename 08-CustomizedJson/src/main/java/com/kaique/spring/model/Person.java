@@ -1,23 +1,33 @@
-package com.kaique.spring.data.vo.v1;
+package com.kaique.spring.model;
+
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-public class PersonVO implements Serializable {
+@Entity
+@Table(name = "person")
+public class Person implements Serializable {
 
     private static final Long serialVersionUID = 1L;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "first_name", nullable = false, length = 225)
     private String firstName;
 
+    @Column(name = "last_name", nullable = false, length = 225)
     private String lastName;
 
+    @Column(length = 225, nullable = false)
     private String address;
 
+    @Column(length = 6, nullable = false)
     private String gender;
 
-    public PersonVO() {}
+    public Person() {}
 
     public Long getId() {
         return id;
@@ -61,7 +71,7 @@ public class PersonVO implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof PersonVO person)) return false;
+        if (!(o instanceof Person person)) return false;
         return Objects.equals(id, person.id) && Objects.equals(firstName, person.firstName) && Objects.equals(lastName, person.lastName) && Objects.equals(address, person.address) && Objects.equals(gender, person.gender);
     }
 
