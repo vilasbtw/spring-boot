@@ -1,18 +1,21 @@
 package com.kaique.spring.services;
 
-import com.kaique.spring.controllers.PersonController;
-import com.kaique.spring.data.vo.v1.PersonVO;
-import com.kaique.spring.exceptions.ResourceNotFoundException;
-import com.kaique.spring.mapper.DozerMapper;
-import com.kaique.spring.model.Person;
-import com.kaique.spring.repositories.PersonRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.List;
 import java.util.logging.Logger;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.kaique.spring.controllers.PersonController;
+import com.kaique.spring.data.vo.v1.PersonVO;
+import com.kaique.spring.exceptions.RequiredObjectIsNullException;
+import com.kaique.spring.exceptions.ResourceNotFoundException;
+import com.kaique.spring.mapper.DozerMapper;
+import com.kaique.spring.model.Person;
+import com.kaique.spring.repositories.PersonRepository;
 
 @Service
 public class PersonService {
@@ -25,6 +28,8 @@ public class PersonService {
     // private PersonRepository repository = new PersonRepository();
 
     public PersonVO create(PersonVO personVO) {
+    	if (personVO == null) throw new RequiredObjectIsNullException();
+    	
         logger.info("Creating a person");
 
         Person entity = DozerMapper.parseObjects(personVO, Person.class);
@@ -52,16 +57,18 @@ public class PersonService {
         return vos;
     }
 
-    public PersonVO update(PersonVO person) {
+    public PersonVO update(PersonVO personVO) {
+    	if (personVO == null) throw new RequiredObjectIsNullException();
+    	
         logger.info("Updating a person");
 
-        Person entity = repository.findById(person.getKey())
+        Person entity = repository.findById(personVO.getKey())
                 .orElseThrow(() -> new ResourceNotFoundException("Resource not found."));
 
-        entity.setFirstName(person.getFirstName());
-        entity.setLastName(person.getLastName());
-        entity.setAddress(person.getAddress());
-        entity.setGender(person.getGender());
+        entity.setFirstName(personVO.getFirstName());
+        entity.setLastName(personVO.getLastName());
+        entity.setAddress(personVO.getAddress());
+        entity.setGender(personVO.getGender());
 
         PersonVO vo = DozerMapper.parseObjects(repository.save(entity), PersonVO.class);
         vo.add(linkTo(methodOn(PersonController.class).findById(vo.getKey())).withSelfRel());
