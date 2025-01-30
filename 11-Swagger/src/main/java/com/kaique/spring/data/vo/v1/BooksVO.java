@@ -2,12 +2,12 @@ package com.kaique.spring.data.vo.v1;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.kaique.spring.model.Books;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
 
 @JsonPropertyOrder({"id", "bookName", "authorName", "numberOfPages"})
-public class BooksVO extends Books implements Serializable {
+public class BooksVO extends RepresentationModel<BooksVO> implements Serializable {
 
     private static final Long serialVersionUID = 1L;
 

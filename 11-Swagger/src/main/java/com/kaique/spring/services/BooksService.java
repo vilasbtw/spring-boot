@@ -1,5 +1,6 @@
 package com.kaique.spring.services;
 
+import com.kaique.spring.controllers.BooksController;
 import com.kaique.spring.data.vo.v1.BooksVO;
 import com.kaique.spring.exceptions.RequiredObjectIsNullException;
 import com.kaique.spring.exceptions.ResourceNotFoundException;
@@ -10,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 public class BooksService {
@@ -22,7 +26,7 @@ public class BooksService {
 
         Books entity = DozerMapper.parseObjects(bookVO, Books.class);
         BooksVO vo = DozerMapper.parseObjects(repository.save(entity), BooksVO.class);
-
+        vo.add(linkTo(methodOn(BooksController.class).findById(vo.getKey())).withSelfRel());
         return vo;
     }
 
@@ -31,11 +35,13 @@ public class BooksService {
                 .orElseThrow(() -> new ResourceNotFoundException("Resource not found."));
 
         BooksVO vo = DozerMapper.parseObjects(entity, BooksVO.class);
+        vo.add(linkTo(methodOn(BooksController.class).findById(id)).withSelfRel());
         return vo;
     }
 
     public List<BooksVO> findAll() {
         List<BooksVO> vos = DozerMapper.parseListObjects(repository.findAll(), BooksVO.class);
+        vos.forEach(v-> v.add(linkTo(methodOn(BooksController.class).findById(v.getKey())).withSelfRel()));
         return vos;
     }
 
@@ -50,6 +56,7 @@ public class BooksService {
         entity.setNumberOfPages(bookVO.getNumberOfPages());
 
         BooksVO vo = DozerMapper.parseObjects(repository.save(entity), BooksVO.class);
+        vo.add(linkTo(methodOn(BooksController.class).findById(vo.getKey())).withSelfRel());
         return vo;
     }
 
