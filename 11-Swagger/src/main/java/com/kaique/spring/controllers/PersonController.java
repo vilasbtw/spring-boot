@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.kaique.spring.util.MediaType;
 
-import javax.print.attribute.standard.Media;
 import java.util.List;
 
 @RestController
