@@ -1,7 +1,9 @@
 package com.kaique.spring.services;
 
+import com.kaique.spring.data.vo.v1.BooksVO;
 import com.kaique.spring.exceptions.RequiredObjectIsNullException;
 import com.kaique.spring.exceptions.ResourceNotFoundException;
+import com.kaique.spring.mapper.DozerMapper;
 import com.kaique.spring.model.Books;
 import com.kaique.spring.repositories.BooksRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,32 +17,40 @@ public class BooksService {
     @Autowired
     BooksRepository repository;
 
-    public Books create(Books book) {
-        if (book == null) throw new RequiredObjectIsNullException();
-        return repository.save(book);
+    public BooksVO create(BooksVO bookVO) {
+        if (bookVO == null) throw new RequiredObjectIsNullException();
+
+        Books entity = DozerMapper.parseObjects(bookVO, Books.class);
+        BooksVO vo = DozerMapper.parseObjects(repository.save(entity), BooksVO.class);
+
+        return vo;
     }
 
-    public Books findById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Resource not found."));
-    }
-
-    public List<Books> findAll() {
-        return repository.findAll();
-    }
-
-    public Books update(Books book) {
-
-        if (book == null) throw new RequiredObjectIsNullException();
-
-        Books entity = repository.findById(book.getId())
+    public BooksVO findById(Long id) {
+        Books entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Resource not found."));
 
-        entity.setBookName(book.getBookName());
-        entity.setAuthorName(book.getAuthorName());
-        entity.setNumberOfPages(book.getNumberOfPages());
+        BooksVO vo = DozerMapper.parseObjects(entity, BooksVO.class);
+        return vo;
+    }
 
-        return repository.save(book);
+    public List<BooksVO> findAll() {
+        List<BooksVO> vos = DozerMapper.parseListObjects(repository.findAll(), BooksVO.class);
+        return vos;
+    }
+
+    public BooksVO update(BooksVO bookVO) {
+        if (bookVO == null) throw new RequiredObjectIsNullException();
+
+        Books entity = repository.findById(bookVO.getKey())
+                .orElseThrow(() -> new ResourceNotFoundException("Resource not found."));
+
+        entity.setBookName(bookVO.getBookName());
+        entity.setAuthorName(bookVO.getAuthorName());
+        entity.setNumberOfPages(bookVO.getNumberOfPages());
+
+        BooksVO vo = DozerMapper.parseObjects(repository.save(entity), BooksVO.class);
+        return vo;
     }
 
     public void delete(Long id) {
