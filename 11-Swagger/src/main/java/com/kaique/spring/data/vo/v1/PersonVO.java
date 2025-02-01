@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @JsonPropertyOrder({"id", "firstName", "lastName", "address", "gender"})
+// RepresentationModel is a class from Spring HATEOAS that adds the link in the JSON response.
 public class PersonVO extends RepresentationModel<PersonVO> implements Serializable {
 
     private static final Long serialVersionUID = 1L;

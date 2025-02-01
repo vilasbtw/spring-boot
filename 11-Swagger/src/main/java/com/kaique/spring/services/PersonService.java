@@ -45,7 +45,7 @@ public class PersonService {
                 .orElseThrow(() -> new ResourceNotFoundException("Resource not found."));
 
         PersonVO vo = DozerMapper.parseObjects(entity, PersonVO.class);
-        vo.add(linkTo(methodOn(PersonController.class).findById(id)).withSelfRel());
+        vo.add(linkTo(methodOn(PersonController.class).findAll()).withRel("List of all people"));
         return vo;
     }
 
@@ -53,7 +53,12 @@ public class PersonService {
         logger.info("Finding all persons!");
 
         List<PersonVO> vos = DozerMapper.parseListObjects(repository.findAll(), PersonVO.class);
-        vos.forEach(v -> v.add(linkTo(methodOn(PersonController.class).findById(v.getKey())).withSelfRel()));
+
+        for (PersonVO v : vos) {
+            Long id = v.getKey();
+            v.add(linkTo(methodOn(PersonController.class).findById(id)).withSelfRel());
+        }
+        // vos.forEach(v -> v.add(linkTo(methodOn(PersonController.class).findById(v.getKey())).withSelfRel()));
         return vos;
     }
 

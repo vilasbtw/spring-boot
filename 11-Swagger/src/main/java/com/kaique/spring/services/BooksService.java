@@ -35,13 +35,20 @@ public class BooksService {
                 .orElseThrow(() -> new ResourceNotFoundException("Resource not found."));
 
         BooksVO vo = DozerMapper.parseObjects(entity, BooksVO.class);
-        vo.add(linkTo(methodOn(BooksController.class).findById(id)).withSelfRel());
+        vo.add(linkTo(methodOn(BooksController.class).findAll()).withRel("List of all books"));
         return vo;
     }
 
     public List<BooksVO> findAll() {
         List<BooksVO> vos = DozerMapper.parseListObjects(repository.findAll(), BooksVO.class);
-        vos.forEach(v-> v.add(linkTo(methodOn(BooksController.class).findById(v.getKey())).withSelfRel()));
+
+        for (BooksVO v : vos) {
+            // linkTo() generates the link
+            // methodOn() mapps which method will be displayed in the URI
+            v.add(linkTo(methodOn(BooksController.class).findById(v.getKey())).withSelfRel());
+        }
+        // Another way to implement the same iteration:
+        // vos.forEach(v -> v.add(linkTo(methodOn(BooksController.class).findById(v.getKey())).withSelfRel()));
         return vos;
     }
 
