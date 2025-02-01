@@ -2,15 +2,18 @@ package com.kaique.spring.data.vo.v1;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.github.dozermapper.core.Mapping;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @JsonPropertyOrder({"id", "bookName", "authorName", "numberOfPages"})
 public class BooksVO extends RepresentationModel<BooksVO> implements Serializable {
 
     private static final Long serialVersionUID = 1L;
 
+    @Mapping("id")
     @JsonProperty("id")
     private Long key;
     private String bookName;
@@ -24,8 +27,8 @@ public class BooksVO extends RepresentationModel<BooksVO> implements Serializabl
         return key;
     }
 
-    public void setId(Long id) {
-        this.key = id;
+    public void setKey(Long key) {
+        this.key = key;
     }
 
     public String getBookName() {
@@ -50,5 +53,17 @@ public class BooksVO extends RepresentationModel<BooksVO> implements Serializabl
 
     public void setAuthorName(String authorName) {
         this.authorName = authorName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof BooksVO booksVO)) return false;
+        if (!super.equals(o)) return false;
+        return numberOfPages == booksVO.numberOfPages && Objects.equals(key, booksVO.key) && Objects.equals(bookName, booksVO.bookName) && Objects.equals(authorName, booksVO.authorName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), key, bookName, authorName, numberOfPages);
     }
 }
