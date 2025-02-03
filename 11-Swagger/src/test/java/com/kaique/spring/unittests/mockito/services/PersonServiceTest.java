@@ -91,7 +91,7 @@ class PersonServiceTest {
 		assertNotNull(result);
 		assertNotNull(result.getKey());
 		assertNotNull(result.getLinks());
-		assertTrue(result.toString().contains("links: [</api/person/v1/1>;rel=\"self\"]"));
+		assertTrue(result.toString().contains("links: [</api/person/v1>;rel=\"List of all people\"]"));
 		assertEquals("Address Test1", result.getAddress());
 		assertEquals("First Name Test1", result.getFirstName());
 		assertEquals("Last Name Test1", result.getLastName());

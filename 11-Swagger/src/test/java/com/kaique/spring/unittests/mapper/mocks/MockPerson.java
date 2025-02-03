@@ -8,7 +8,6 @@ import com.kaique.spring.model.Person;
 
 public class MockPerson {
 
-
     public Person mockEntity() {
         return mockEntity(0);
     }
