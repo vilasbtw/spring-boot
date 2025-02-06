@@ -9,16 +9,17 @@ import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.lifecycle.Startables;
 
 import java.util.Map;
+import java.util.stream.Stream;
 
 @ContextConfiguration(initializers = AbstractIntegrationTests.Initializer.class)
 public class AbstractIntegrationTests {
 
     static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
-        static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:9.2.0");
+        static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0.30");
 
         private static void startContainers() {
-            Startables.deepStart(mysql).join();
+            Startables.deepStart(Stream.of(mysql)).join();
         }
 
         private static Map<String, String> createConnectionConfiguration() {
@@ -30,11 +31,8 @@ public class AbstractIntegrationTests {
         }
 
         @Override
-        @SuppressWarnings({"unchecked", "rawtypes"})
         public void initialize(ConfigurableApplicationContext applicationContext) {
-
             startContainers();
-
             ConfigurableEnvironment environment = applicationContext.getEnvironment();
             MapPropertySource testcontainers = new MapPropertySource("testcontainers", (Map) createConnectionConfiguration());
             environment.getPropertySources().addFirst(testcontainers);
