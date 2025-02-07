@@ -9,5 +9,8 @@ public class TestConfigs {
     public static final String CONTENT_TYPE_XML = "application/xml";
     public static final String CONTENT_TYPE_YAML = "application/x-yaml";
 
+    public static final String ORIGIN_ERUDIO = "https://www.erudio.com.br";
+    public static final String ORIGIN_SEMERU = "https://www.semeru.com.br";
+
     public static final int SERVER_PORT = 8888;
 }
