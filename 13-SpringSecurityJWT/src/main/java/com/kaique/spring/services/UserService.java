@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 public class UserService implements UserDetailsService {
 
     private Logger logger = Logger.getLogger(UserService.class.getName());
-
     private UserRepository repository;
 
     @Autowired
