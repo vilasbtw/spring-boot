@@ -1,4 +1,4 @@
-package com.kaique.spring.securityJwt;
+package com.kaique.spring.security.jwt;
 
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -48,8 +48,8 @@ public class JwtTokenProvider {
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
 
-        var accessToken = getAccessToken(username, roles, now, validity);
-        var refreshToken = getRefreshToken(username, roles, now);
+        String accessToken = getAccessToken(username, roles, now, validity);
+        String refreshToken = getRefreshToken(username, roles, now);
 
         return new TokenVO(username, true, now, validity, accessToken, refreshToken);
     }
@@ -98,6 +98,7 @@ public class JwtTokenProvider {
         return decodedJWT;
     }
 
+    // Removes the "Bearer " before the token, formatting it
     public String resolveToken(HttpServletRequest req) {
         String bearerToken = req.getHeader("Authorization");
 
@@ -107,11 +108,12 @@ public class JwtTokenProvider {
         return null;
     }
 
+    // Checks the token validity
     public boolean validateToken(String token) {
-
         DecodedJWT decodedJWT = decodedToken(token);
 
         try {
+            // If the current date passed the token expiration period, it is expired
             if (decodedJWT.getExpiresAt().before(new Date())) {
                 return false;
             }
